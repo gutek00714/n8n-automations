@@ -1,0 +1,499 @@
+{
+  "name": "BGG",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://api.geekdo.com/api/geekcontest/contests?partial=home",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        112,
+        0
+      ],
+      "id": "321afc48-3880-4e53-9249-8acbbf6f6244",
+      "name": "HTTP Request",
+      "notes": "Download the contest data from API."
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 20
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "9336301b-e4f9-4487-bf57-9f784f23153b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "BGG contest",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Arkusz1",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        -224
+      ],
+      "id": "1f364eff-577a-449a-a0b3-4da8c83cd19f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "27HS8c3S9lTguJEm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4d989112-fd0a-4001-aa07-a1c720fb7a77",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "50bb4268-e799-45a7-bb72-09f1205cca90",
+              "name": "homeImageId",
+              "value": "={{ $json.homeImageId }}",
+              "type": "number"
+            },
+            {
+              "id": "5421c02e-dea7-4d69-bf02-72d0faf2579c",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "f2acff4d-e88c-468d-ac87-75915aff4fc2",
+              "name": "endDate",
+              "value": "={{ $json.endDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        0
+      ],
+      "id": "8b2baa19-3cc6-448e-925b-c72575eb65ca",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1248,
+        80
+      ],
+      "id": "33484dac-b044-4b5c-a055-4fd071cd18b6",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "homeImageId",
+              "field2": "homeImageId"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        -128
+      ],
+      "id": "b2b712c0-e553-440a-8418-0f9ca492321f",
+      "name": "Compare Datasets",
+      "notes": "Compare homeImageId from Google Sheets and data just downloaded Api."
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1008,
+        -48
+      ],
+      "id": "c66d5e99-0344-4f6a-be43-4e3fe617e04e",
+      "name": "Clear sheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "27HS8c3S9lTguJEm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "homeImageId",
+              "displayName": "homeImageId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1536,
+        80
+      ],
+      "id": "fa308b69-b7c7-4392-b9d9-0ebef49637c9",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "27HS8c3S9lTguJEm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=",
+        "options": {},
+        "embeds": {
+          "values": [
+            {
+              "description": "={{ $json.author }}\nEnds {{ $json.endDate }}",
+              "author": "Nowy konkurs:",
+              "title": "={{ $json.title }}",
+              "url": "={{ $json.url }}",
+              "image": "={{ $json.thumbnail }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        -208
+      ],
+      "id": "10ee8d08-bbde-4888-9168-0f1b17ce6280",
+      "name": "Discord",
+      "webhookId": "c9a113e2-e40a-4584-b6df-75d74400e43e",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "QcOYWc0gKyGObYsD",
+          "name": "Discord Webhook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.geekdo.com/api/images/{{ $json.homeImageId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1008,
+        -208
+      ],
+      "id": "715468bb-1d35-453c-9761-584884f3c0b2",
+      "name": "HTTP Request1",
+      "notes": "Download images by using homeImageId from the Api."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "048cf1bd-8e47-4d52-a775-348e47d3087c",
+              "name": "title",
+              "value": "={{ $('Compare Datasets').item.json.title.split(\"\\\"\")[1] }}",
+              "type": "string"
+            },
+            {
+              "id": "b5985f45-6de0-46f4-ae3c-305b3f7eb0fb",
+              "name": "homeImageId",
+              "value": "={{ $('Compare Datasets').item.json.homeImageId }}",
+              "type": "number"
+            },
+            {
+              "id": "8198db24-664d-41b7-bfac-25156c0e3f83",
+              "name": "url",
+              "value": "=https://boardgamegeek.com{{ $('Compare Datasets').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "99a3224f-f568-4e43-9b27-132b8e73a7c2",
+              "name": "thumbnail",
+              "value": "={{ $json.images.mediacard.url }}",
+              "type": "string"
+            },
+            {
+              "id": "b793e3e3-af11-4a73-9e16-c97bd5943463",
+              "name": "author",
+              "value": "={{ $('Compare Datasets').item.json.title.split(\"\\\"\")[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "7cfde3bf-0830-48bd-a977-a2a01db1fdba",
+              "name": "endDate",
+              "value": "=<t:{{ Date.parse($('Compare Datasets').item.json.endDate)/1000 }}:R>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1248,
+        -208
+      ],
+      "id": "016a00b0-83ae-4153-a807-43c365679c80",
+      "name": "Edit Fields1",
+      "notes": "Prepare data for the Discord webhook notification."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [],
+        [],
+        [],
+        [
+          {
+            "node": "Clear sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Discord": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Warsaw",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "7acec37b-c28d-4a1f-b292-fcb390fe40f5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "638c7bc7f6489991ab4989fc28b049079fd4ccc1540e92ca79bf1064e10f3ccd"
+  },
+  "id": "rP1GFRfWzmks95F5",
+  "tags": []
+}
