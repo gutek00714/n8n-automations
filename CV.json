@@ -1,0 +1,885 @@
+{
+  "name": "CV",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "hour": 17
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "subject:(application OR job OR CV OR intern OR rekrutacji OR rekrutacja OR aplikacji OR position)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -192,
+        -16
+      ],
+      "id": "947c4889-c4b1-4ab4-8b87-4b36ff27cc24",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "<GMAIL_CREDENTIAL_ID>",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}",
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "257c45e0-398e-43e9-b6b0-4157b93d2f3e",
+      "name": "Get a message",
+      "webhookId": "1755b4b9-5243-46e5-a4fc-79fc15391e6d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "<GMAIL_CREDENTIAL_ID>",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        -16
+      ],
+      "id": "e3a304bb-bbe7-4bb8-b1a5-54f2bc032cb8",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "<CREDENTIAL_ID>",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Uwagi": "={{ $json.Uwagi }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Data:",
+              "displayName": "Data:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Nazwa stanowiska",
+              "displayName": "Nazwa stanowiska",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Nazwa pracodawcy",
+              "displayName": "Nazwa pracodawcy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Uwagi",
+              "displayName": "Uwagi",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "update PUP",
+              "displayName": "update PUP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2320,
+        -32
+      ],
+      "id": "5b6667a6-6818-4f09-8f38-75b75718acf8",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "<CREDENTIAL_ID>",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ea6d4b5d-23c8-4ff9-bacf-f3c6c71c4cc4",
+              "leftValue": "={{ $json['Nazwa pracodawcy'] }}",
+              "rightValue": "={{ $('Get details from email').item.json.company }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "82ae76d5-6d65-4392-a691-2086e38a0b92",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -16
+      ],
+      "id": "c871ef7c-9453-476b-9c1f-5293cb695607",
+      "name": "If1",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are connected to the system. You will receive a list of potential matches and one key from the email. You have to answer only with the company name you think matches the key provided. If there is not a match just send error.",
+              "role": "system"
+            },
+            {
+              "content": "=Key: {{ $('Get details from email').item.json.company }} List: {{ $json.companyList }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1424,
+        144
+      ],
+      "id": "bbb7b38c-d9bc-4f7d-8a43-ffd1fb71e575",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "<CREDENTIAL_ID>",
+          "name": "OpenAi_account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "Nazwa pracodawcy",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        144
+      ],
+      "id": "5b8f0792-9850-41b9-88b3-f7aa3419f209",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1920,
+        144
+      ],
+      "id": "507fceba-2038-4fa0-b59c-c2e664146961",
+      "name": "Get row(s) in sheet2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "<CREDENTIAL_ID>",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ea6d4b5d-23c8-4ff9-bacf-f3c6c71c4cc4",
+              "leftValue": "={{ $json['Nazwa pracodawcy'] }}",
+              "rightValue": "={{ $('Change name ChatGPT').item.json.company }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2096,
+        144
+      ],
+      "id": "55ab44eb-cd9e-4502-bbdb-3e5caf7062f3",
+      "name": "If",
+      "alwaysOutputData": false,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Uwagi": "={{ $json.Uwagi }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Data:",
+              "displayName": "Data:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Nazwa stanowiska",
+              "displayName": "Nazwa stanowiska",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Nazwa pracodawcy",
+              "displayName": "Nazwa pracodawcy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Uwagi",
+              "displayName": "Uwagi",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "update PUP",
+              "displayName": "update PUP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2592,
+        128
+      ],
+      "id": "75ea7594-f45e-4e62-af2e-e82e0f5ec1d1",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "<CREDENTIAL_ID>",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pobierz tekst maila i oczyść\nlet text = ($json.text || \"\").replace(/\\s+/g, \" \").toLowerCase();\n\n// Lista fraz odrzucenia\nconst rejectPhrases = [\n  \"regret\",\n  \"nie mogliśmy\",\n  \"will move forward with other\",\n  \"rejected\"\n];\n\nconst isRejected = rejectPhrases.some(phrase => text.includes(phrase));\n\n// Pobierz adres nadawcy z właściwego miejsca\nlet senderEmail = \"unknown\";\nif (\n  $input.first().json.from &&\n  $input.first().json.from.value &&\n  $input.first().json.from.value[0] &&\n  $input.first().json.from.value[0].address\n) {\n  senderEmail = $input.first().json.from.value[0].address.toLowerCase();\n}\n\n// Wyciągnij firmę z adresu mailowego (po @)\nlet company = \"unknown\";\nconst match = senderEmail.match(/@([^.>]+)\\./);\nif (match && match[1]) {\n  company = match[1].toLowerCase();\n}\n\n// Zwróć dane\nreturn [{\n  json: {\n    statusText: isRejected ? \"odrzucony\" : \"rozmowa\",\n    rejectedFlag: isRejected,\n    company: company\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -16
+      ],
+      "id": "d151e381-f075-4ce9-8b30-6c7fdd49fbd0",
+      "name": "Get details from email"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pobierz tablicę z input\nconst data = $input.first().json.data;\n\n// Wyciągnij nazwy i odfiltruj puste\nconst companyNames = data\n  .map(item => item[\"Nazwa pracodawcy\"])\n  .filter(name => name); // usuwa puste stringi\n\n// Zwróć jako pojedynczy item z listą\nreturn [{\n  json: { companyList: companyNames }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        144
+      ],
+      "id": "19b78b4d-53ea-4142-990a-2724b908738a",
+      "name": "Flatten JSON"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f6cf107-75d9-4fc8-a78a-6c6fd8cf968e",
+              "name": "company",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "4404e2d7-5487-459b-9b17-a5e72eee8872",
+              "name": "statusText",
+              "value": "={{ $('Get details from email').item.json.statusText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1744,
+        144
+      ],
+      "id": "5f88a4c5-6816-4c37-b81b-6b7c2eeb319c",
+      "name": "Change name ChatGPT"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ac756ca-c4f0-403a-a16c-9cb5b794404f",
+              "name": "row_number",
+              "value": "={{ $json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "a38a0c29-8639-4489-8ddb-46b8f42d1c30",
+              "name": "Data:",
+              "value": "={{ $json['Data:'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e53abd13-101b-4312-8a57-838abcd101de",
+              "name": "Nazwa stanowiska",
+              "value": "={{ $json['Nazwa stanowiska'] }}",
+              "type": "string"
+            },
+            {
+              "id": "161142c2-d9ad-4e57-aafe-7f87faefe385",
+              "name": "Nazwa pracodawcy",
+              "value": "={{ $json['Nazwa pracodawcy'] }}",
+              "type": "string"
+            },
+            {
+              "id": "73422e61-2cc5-4fb4-8106-9a6433e5a7f1",
+              "name": "Uwagi",
+              "value": "={{ $('Get details from email').item.json.statusText }}",
+              "type": "string"
+            },
+            {
+              "id": "d554911a-9228-4832-85e5-62eac1679b11",
+              "name": "Link",
+              "value": "={{ $json.Link }}",
+              "type": "string"
+            },
+            {
+              "id": "062fe0a9-6eff-48d3-b8fb-9e95c706e0d1",
+              "name": "update PUP",
+              "value": "={{ $json['update PUP'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2112,
+        -32
+      ],
+      "id": "7d004eaa-cac1-47ee-a3d3-ba89dc1306a1",
+      "name": "Add status to row"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ac756ca-c4f0-403a-a16c-9cb5b794404f",
+              "name": "row_number",
+              "value": "={{ $json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "a38a0c29-8639-4489-8ddb-46b8f42d1c30",
+              "name": "Data:",
+              "value": "={{ $json['Data:'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e53abd13-101b-4312-8a57-838abcd101de",
+              "name": "Nazwa stanowiska",
+              "value": "={{ $json['Nazwa stanowiska'] }}",
+              "type": "string"
+            },
+            {
+              "id": "161142c2-d9ad-4e57-aafe-7f87faefe385",
+              "name": "Nazwa pracodawcy",
+              "value": "={{ $json['Nazwa pracodawcy'] }}",
+              "type": "string"
+            },
+            {
+              "id": "73422e61-2cc5-4fb4-8106-9a6433e5a7f1",
+              "name": "Uwagi",
+              "value": "={{ $('Change name ChatGPT').item.json.statusText }}",
+              "type": "string"
+            },
+            {
+              "id": "d554911a-9228-4832-85e5-62eac1679b11",
+              "name": "Link",
+              "value": "={{ $json.Link }}",
+              "type": "string"
+            },
+            {
+              "id": "062fe0a9-6eff-48d3-b8fb-9e95c706e0d1",
+              "name": "update PUP",
+              "value": "={{ $json['update PUP'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2368,
+        128
+      ],
+      "id": "352c67b6-6e8c-4885-9ae5-7182b2e8cf17",
+      "name": "Add status to row (GPT)"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "My Sheet",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "<YOUR_GOOGLE_SHEET_ID>",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "<LINK_TO_YOUR_GOOGLE_SHEET>"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        880,
+        144
+      ],
+      "id": "1419941f-b95e-4d1a-b61d-5131b17c056c",
+      "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "<CREDENTIAL_ID>",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "Get details from email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Add status to row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Flatten JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Change name ChatGPT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Add status to row (GPT)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Get details from email": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flatten JSON": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Change name ChatGPT": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add status to row": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add status to row (GPT)": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Warsaw",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "929fc9fc-7cf6-4967-a2b9-af549d8a4f14",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "638c7bc7f6489991ab4989fc28b049079fd4ccc1540e92ca79bf1064e10f3ccd"
+  },
+  "id": "FkAuCG02QUxhE2SL",
+  "tags": []
+}
